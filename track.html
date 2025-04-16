@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Your Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="trackcss.css" />
+</head>
+
+<body>
+  <header class="top-nav" id="navbar">
+    <div class="logo" onclick="location.href = '#'">Route-Note</div>
+    
+    <div class="auth-container">
+      <div class="auth-box" id="scrollToAboutUs">
+        <button id="accountBtn">Account</button>
+      </div>
+      <div id="accountInfo">
+        <p><strong>First Name:</strong> <span id="firstName"></span></p>
+        <p><strong>Last Name:</strong> <span id="lastName"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+      </div>
+    </div>
+    
+    </div>
+  </header>
+  
+   <!-- 🔹 Background -->
+  <div class="overlay"></div>
+
+  <!-- 🔹 App Layout -->
+  <div class="container">
+    <div class="left-side">
+      <div class="form-heading">Track Your Journey</div>
+
+      <!-- Place Input -->
+      <div class="input-group">Enter Place Name
+        <div class="input-wrapper">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="placeInput" />
+          
+        </div>  
+        <button class="btn" onclick="searchPlace()">
+          <i class="fas fa-search"></i> Search
+        </button>  
+      </div>
+
+      <!-- Description -->
+      <div class="input-group">Enter description
+        <div class="input-wrapper">
+          <i class="fas fa-align-left"></i>
+          <textarea id="description"></textarea>
+        </div>
+      </div>
+
+      <!-- Upload Image -->
+      <div class="input-group">Images
+        <div class="input-wrapper">
+          <i class="fas fa-image"></i>
+          <input type="file" id="fileInput"/>
+          <button id="uploadImages">Upload</button>
+        </div>
+      </div>
+
+      <!-- Image URL Input -->
+      <div class="input-group">
+        <div class="input-wrapper">
+          <i class="fas fa-image"></i>
+          <input type="text" id="imageUrlInput" placeholder="Paste image URL (optional)" />
+        </div>
+        <img id="imagePreview" class="preview-img" src="" alt="Preview" style="display: none;" />
+      </div>
+
+      <!-- Save Button -->
+      <button class="btn" onclick="saveToFirebase()">
+        <i class="fas fa-save"></i> Save Location
+      </button>
+
+      <button class="btn" onclick="window.location.href='journal.html'">
+        <i></i> View Saved Memories
+      </button>
+      
+
+    </div>
+
+    <div class="right-side">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script type="module" src="track.js"></script>
+
+  
+  <!-- Image URL Preview -->
+  <script>
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageUrlInput.addEventListener('input', () => {
+      const url = imageUrlInput.value.trim();
+      if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        imagePreview.src = url;
+        imagePreview.style.display = 'block';
+      } else {
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+      }
+    });
+
+     // Example user data (replace with real data from backend if needed)
+     const user = {
+      firstName: "Udipto",
+      lastName: "Bordoloi",
+      email: "udiptobordoloi12@gmail.com"
+    };
+
+    // Fill in user info
+    document.getElementById("firstName").textContent = user.firstName;
+    document.getElementById("lastName").textContent = user.lastName;
+    document.getElementById("email").textContent = user.email;
+
+    // Toggle visibility of account info
+    document.getElementById("accountBtn").addEventListener("click", () => {
+      const infoBox = document.getElementById("accountInfo");
+      infoBox.classList.toggle("visible");
+    });
+  </script>
+</body>
+</html>
